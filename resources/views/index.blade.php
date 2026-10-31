@@ -18,7 +18,12 @@
         <article class="blog-cartao">
             <h2><a href="{{ route(config('blog.nome_rota').'.show', $post->slug) }}">{{ $post->titulo }}</a></h2>
             <p>{{ $post->descricao }}</p>
-            <p class="blog-meta">{{ $post->minutosDeLeitura() }} min de leitura</p>
+            <p class="blog-meta">
+                {{ $post->minutosDeLeitura() }} min de leitura
+                @if ($post->parceiro)
+                    · <span class="blog-cartao-parceiro">@if ($post->parceiroLogo)<img src="{{ $post->parceiroLogo }}" alt="">@endif com {{ $post->parceiro }}</span>
+                @endif
+            </p>
         </article>
     @empty
         <p>Nenhum texto publicado ainda.</p>

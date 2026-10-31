@@ -20,7 +20,10 @@ class ConferirCommand extends Command
                 $this->line("  - {$problema}");
             }
         }
-        $this->info(count($blog->publicados()).' publicado(s), '.count($erros).' com erro.');
+        foreach ($blog->agendados() as $post) {
+            $this->line("agendado: {$post->slug} entra no ar em {$post->data->format('d/m/Y')}");
+        }
+        $this->info(count($blog->publicados()).' publicado(s), '.count($blog->agendados()).' agendado(s), '.count($erros).' com erro.');
 
         return $erros === [] ? self::SUCCESS : self::FAILURE;
     }

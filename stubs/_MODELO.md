@@ -7,6 +7,11 @@ rascunho: sim
 # atualizado: 2026-01-01
 # imagem: /caminho/da/imagem.png
 # imagem_alt: O que a imagem mostra
+# imagem_credito: Foto: Wikimedia Commons, CC0
+# tags: software, gestão, pequenas empresas
+# parceiro: Nome do parceiro
+# parceiro_logo: /caminho/do/logo.png
+# parceiro_url: https://site-do-parceiro.com.br
 # acao_texto: Fale com a gente
 # acao_url: /#contato
 ---

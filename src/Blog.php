@@ -24,6 +24,15 @@ class Blog
         return $posts;
     }
 
+    /** @return list<Post> prontos com data futura, do mais próximo ao mais distante */
+    public function agendados(): array
+    {
+        $posts = array_values(array_filter($this->ler()['posts'], fn (Post $p) => $p->agendado()));
+        usort($posts, fn (Post $a, Post $b) => $a->data <=> $b->data ?: strcmp($a->slug, $b->slug));
+
+        return $posts;
+    }
+
     public function achar(string $slug): ?Post
     {
         foreach ($this->publicados() as $post) {
@@ -123,10 +132,19 @@ class Blog
         $data = $this->data($campos['data'] ?? '', 'data', $problemas);
         $atualizado = ($campos['atualizado'] ?? '') !== '' ? $this->data($campos['atualizado'], 'atualizado', $problemas) : null;
 
-        foreach (['imagem', 'acao_url'] as $campo) {
+        foreach (['imagem', 'acao_url', 'parceiro_logo', 'parceiro_url'] as $campo) {
             if (($campos[$campo] ?? '') !== '' && preg_match('~^(https?://|/(?!/))~i', $campos[$campo]) !== 1) {
                 $problemas[] = "{$campo}: use um endereço que comece com https:// ou /";
             }
+        }
+
+        if (($campos['parceiro_logo'] ?? '').($campos['parceiro_url'] ?? '') !== '' && ($campos['parceiro'] ?? '') === '') {
+            $problemas[] = 'parceiro_logo e parceiro_url pedem o campo parceiro, com o nome dele';
+        }
+
+        $tags = array_values(array_filter(array_map('trim', explode(',', $campos['tags'] ?? '')), fn (string $t) => $t !== ''));
+        if (count($tags) > 8) {
+            $problemas[] = 'tags: no máximo 8, separadas por vírgula';
         }
 
         if ($problemas !== [] || $data === null) {
@@ -142,10 +160,15 @@ class Blog
             autor: ($campos['autor'] ?? '') ?: null,
             imagem: ($campos['imagem'] ?? '') ?: null,
             imagemAlt: ($campos['imagem_alt'] ?? '') ?: null,
+            imagemCredito: ($campos['imagem_credito'] ?? '') ?: null,
             rascunho: in_array(mb_strtolower($campos['rascunho'] ?? ''), ['sim', 'true'], true),
             acaoTexto: ($campos['acao_texto'] ?? '') ?: null,
             acaoUrl: ($campos['acao_url'] ?? '') ?: null,
             corpo: $partes[2],
+            tags: $tags,
+            parceiro: ($campos['parceiro'] ?? '') ?: null,
+            parceiroLogo: ($campos['parceiro_logo'] ?? '') ?: null,
+            parceiroUrl: ($campos['parceiro_url'] ?? '') ?: null,
         );
     }
 

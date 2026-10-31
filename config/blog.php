@@ -22,9 +22,17 @@ return [
     'acao_texto' => null,
     'acao_url' => null,
 
+    // Botões de compartilhar no fim de cada texto, nesta ordem. Tire o que não
+    // quiser; [] esconde a barra. São links comuns, sem script de rede social.
+    // O "Copiar link" e o "Copiar para o LinkedIn" (título, resumo, endereço e
+    // hashtags das `tags`) aparecem quando o navegador roda o script do pacote.
+    'compartilhar' => ['linkedin', 'whatsapp', 'facebook', 'x', 'email'],
+
     // O casco. `blog::layout` serve para sistema Inertia, que não tem layout
     // Blade. Quem tem o seu aponta para ele e diz os nomes das seções.
     'layout' => 'blog::layout',
-    'secoes' => ['titulo' => 'titulo', 'descricao' => 'descricao', 'conteudo' => 'conteudo'],
+    // `imagem` é opcional: se o layout tiver uma seção para a imagem da prévia
+    // nas redes (og:image), dê o nome dela e o texto com `imagem` a preenche.
+    'secoes' => ['titulo' => 'titulo', 'descricao' => 'descricao', 'conteudo' => 'conteudo', 'imagem' => null],
     'pilha_cabecalho' => 'blog_cabecalho',
 ];

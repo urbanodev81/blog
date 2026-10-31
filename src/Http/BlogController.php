@@ -35,7 +35,20 @@ class BlogController
         $post = $blog->achar($slug);
         abort_if($post === null, 404);
 
-        return view('blog::show', ['post' => $post, 'acao' => $this->acao($post)]);
+        return view('blog::show', [
+            'post' => $post,
+            'acao' => $this->acao($post),
+            'redes' => $this->redes($post, url()->current()),
+            'textoParaRedes' => $post->textoParaRedes(url()->current()),
+        ]);
+    }
+
+    public function script(): Response
+    {
+        return response((string) file_get_contents(__DIR__.'/../../resources/js/blog.js'), 200, [
+            'Content-Type' => 'text/javascript; charset=UTF-8',
+            'Cache-Control' => 'public, max-age=3600',
+        ]);
     }
 
     public function estilo(): Response
@@ -44,6 +57,35 @@ class BlogController
             'Content-Type' => 'text/css; charset=UTF-8',
             'Cache-Control' => 'public, max-age=3600',
         ]);
+    }
+
+    /**
+     * Links comuns, sem script de terceiro: cada rede abre a própria tela de
+     * compartilhar. A ordem e quais aparecem vêm de `blog.compartilhar`.
+     *
+     * @return list<array{rede: string, rotulo: string, url: string}>
+     */
+    private function redes(Post $post, string $url): array
+    {
+        $u = rawurlencode($url);
+        $t = rawurlencode($post->titulo);
+        $tags = rawurlencode(implode(' ', $post->hashtags()));
+        $todas = [
+            'linkedin' => ['LinkedIn', "https://www.linkedin.com/sharing/share-offsite/?url={$u}"],
+            'whatsapp' => ['WhatsApp', 'https://wa.me/?text='.rawurlencode($post->titulo.' '.$url)],
+            'facebook' => ['Facebook', "https://www.facebook.com/sharer/sharer.php?u={$u}"],
+            'x' => ['X', "https://x.com/intent/post?text={$t}%20{$tags}&url={$u}"],
+            'email' => ['E-mail', "mailto:?subject={$t}&body=".rawurlencode($post->descricao."\n\n".$url)],
+        ];
+
+        $redes = [];
+        foreach ((array) config('blog.compartilhar', array_keys($todas)) as $rede) {
+            if (isset($todas[$rede])) {
+                $redes[] = ['rede' => $rede, 'rotulo' => $todas[$rede][0], 'url' => $todas[$rede][1]];
+            }
+        }
+
+        return $redes;
     }
 
     /** @return array{texto: string, url: string}|null */

@@ -30,8 +30,33 @@ php artisan blog:conferir                       # diz o que está errado
 | `rascunho` | não | `sim` deixa fora do ar |
 | `atualizado` | não | a data da última revisão |
 | `autor` | não | quem escreveu |
-| `imagem`, `imagem_alt` | não | endereço da imagem e o que ela mostra |
+| `imagem`, `imagem_alt` | não | endereço da imagem de capa e o que ela mostra |
+| `imagem_credito` | não | legenda com a origem da foto (ex.: `Foto: Wikimedia Commons, CC0`) |
+| `tags` | não | até 8, separadas por vírgula; viram `#Hashtags` no fim do texto e no "Copiar para o LinkedIn" |
+| `parceiro` | não | nome do parceiro que escreveu junto; aparece "Em parceria com" |
+| `parceiro_logo`, `parceiro_url` | não | logo quadrado do parceiro e o site dele |
 | `acao_texto`, `acao_url` | não | o botão do fim do texto |
+
+## Agendar
+
+Escreva tudo, apague `rascunho: sim` e ponha em `data` o dia em que o texto deve
+entrar no ar. Até lá ele não tem endereço, não aparece na lista nem no Google;
+no dia, entra sozinho, sem deploy. `php artisan blog:conferir` lista os
+agendados com a data.
+
+## Imagens
+
+Foto só de banco gratuito com licença que permita uso comercial (Wikimedia
+Commons com CC0 ou domínio público, Unsplash, Pexels) ou feita por nós.
+**Baixe e guarde no próprio site** (`public/`): o site não carrega imagem de
+outro endereço. Capa em 1200×630, que é o tamanho da prévia no LinkedIn e no
+WhatsApp. Imagem no meio do texto: `![o que ela mostra](/caminho/foto.jpg)`.
+
+## Compartilhar
+
+No fim de cada texto há botões de LinkedIn, WhatsApp, Facebook, X e e-mail, e
+"Copiar para o LinkedIn", que copia título, resumo, endereço e as hashtags das
+`tags`: é só colar num post novo.
 
 ## Texto que não apareceu
 

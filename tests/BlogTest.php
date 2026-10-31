@@ -139,4 +139,68 @@ class BlogTest extends TestCase
         $this->assertTrue(Route::has('blog.index'));
         $this->assertStringContainsString('BlogController', Route::getRoutes()->getByName('blog.show')->getActionName());
     }
+
+    public function test_agendado_aparece_no_conferir_com_a_data(): void
+    {
+        $dia = now()->addDays(3);
+        $this->texto('amanha', data: $dia->toDateString());
+
+        $this->artisan('blog:conferir')
+            ->expectsOutput('agendado: amanha entra no ar em '.$dia->format('d/m/Y'))
+            ->assertSuccessful();
+    }
+
+    public function test_tags_viram_hashtags_e_texto_para_o_linkedin(): void
+    {
+        $this->texto('com-tags', "tags: deploy automático, segurança, DevOps\n");
+
+        $this->get('/blog/com-tags')->assertOk()
+            ->assertSee('#DeployAutomatico #Seguranca #DevOps')
+            ->assertSee('"keywords":"deploy automático, segurança, DevOps"', false)
+            ->assertSee('Copiar para o LinkedIn');
+    }
+
+    public function test_barra_de_compartilhar_segue_a_configuracao(): void
+    {
+        $this->texto('dividir');
+
+        $this->get('/blog/dividir')->assertOk()
+            ->assertSee('https://www.linkedin.com/sharing/share-offsite/?url='.rawurlencode('http://localhost/blog/dividir'), false)
+            ->assertSee('https://wa.me/?text=', false);
+
+        config(['blog.compartilhar' => ['whatsapp']]);
+        $this->get('/blog/dividir')->assertDontSee('linkedin.com', false)->assertSee('wa.me', false);
+
+        config(['blog.compartilhar' => []]);
+        $this->get('/blog/dividir')->assertDontSee('Compartilhar</h2>', false);
+        $this->get('/blog/compartilhar.js')->assertOk()->assertHeader('Content-Type', 'text/javascript; charset=UTF-8');
+    }
+
+    public function test_parceiro_aparece_com_logo_e_na_lista(): void
+    {
+        $this->texto('juntos', "parceiro: Oficina WJ\nparceiro_logo: /logos/wj.png\nparceiro_url: https://wj.example\n");
+
+        $this->get('/blog/juntos')->assertOk()
+            ->assertSee('Em parceria com')
+            ->assertSee('<a href="https://wj.example" rel="noopener">Oficina WJ</a>', false)
+            ->assertSee('src="/logos/wj.png"', false);
+        $this->get('/blog')->assertSee('com Oficina WJ');
+    }
+
+    public function test_logo_de_parceiro_sem_nome_ou_endereco_invalido_e_erro(): void
+    {
+        $this->texto('sem-nome', "parceiro_logo: /logo.png\n");
+        $this->texto('logo-ruim', "parceiro: X\nparceiro_logo: javascript:alert(1)\n");
+
+        $erros = app(Blog::class)->erros();
+        $this->assertArrayHasKey('sem-nome.md', $erros);
+        $this->assertArrayHasKey('logo-ruim.md', $erros);
+    }
+
+    public function test_imagem_vai_para_a_secao_da_previa_quando_configurada(): void
+    {
+        $this->texto('capa', "imagem: /blog/capa.jpg\nimagem_credito: Foto: Wikimedia Commons, CC0\n");
+
+        $this->get('/blog/capa')->assertOk()->assertSee('Foto: Wikimedia Commons, CC0');
+    }
 }

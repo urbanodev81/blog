@@ -172,7 +172,7 @@ class BlogTest extends TestCase
         $this->get('/blog/dividir')->assertDontSee('linkedin.com', false)->assertSee('wa.me', false);
 
         config(['blog.compartilhar' => []]);
-        $this->get('/blog/dividir')->assertDontSee('Compartilhar</h2>', false);
+        $this->get('/blog/dividir')->assertDontSee('blog-compartilhar-titulo', false);
         $this->get('/blog/compartilhar.js')->assertOk()->assertHeader('Content-Type', 'text/javascript; charset=UTF-8');
     }
 

@@ -27,7 +27,7 @@
 .blog-parceiro img { width: 48px; height: 48px; object-fit: contain; border-radius: .5rem; background: #fff; padding: 4px; }
 .blog-tags { margin-top: 2rem; font-weight: 600; color: var(--blog-destaque, LinkText); word-spacing: .35rem; }
 .blog-compartilhar { margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid color-mix(in srgb, currentColor 25%, transparent); }
-.blog-compartilhar h2 { margin: 0 0 .75rem; font-size: 1rem; }
+.blog-compartilhar-titulo { margin: 0 0 .75rem; font-weight: 600; }
 .blog-compartilhar ul { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0; padding: 0; list-style: none; }
 .blog .blog-rede { display: inline-flex; align-items: center; min-height: 44px; padding: .4rem 1rem; border: 1px solid color-mix(in srgb, currentColor 40%, transparent); border-radius: 999px; background: none; color: inherit; font: inherit; font-size: .92rem; text-decoration: none; cursor: pointer; }
 .blog .blog-rede:hover { border-color: currentColor; }

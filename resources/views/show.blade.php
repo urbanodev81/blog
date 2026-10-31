@@ -67,9 +67,13 @@
             <p class="blog-tags">{{ implode(' ', $post->hashtags()) }}</p>
         @endif
     </article>
+    @if ($acao)
+        <p><a class="blog-acao" href="{{ $acao['url'] }}">{{ $acao['texto'] }}</a></p>
+    @endif
     @if ($redes)
-        <section class="blog-compartilhar" aria-labelledby="blog-compartilhar-titulo">
-            <h2 id="blog-compartilhar-titulo">Compartilhar</h2>
+        {{-- div, não section: o layout do sistema costuma dar espaçamento grande a toda section. --}}
+        <div class="blog-compartilhar" role="group" aria-labelledby="blog-compartilhar-titulo">
+            <p class="blog-compartilhar-titulo" id="blog-compartilhar-titulo">Compartilhar</p>
             <ul>
                 @foreach ($redes as $rede)
                     <li><a class="blog-rede blog-rede-{{ $rede['rede'] }}" href="{{ $rede['url'] }}" target="_blank" rel="noopener">{{ $rede['rotulo'] }}<span class="blog-sr"> (abre em nova aba)</span></a></li>
@@ -78,10 +82,7 @@
                 <li hidden data-blog-copiar="{{ $textoParaRedes }}"><button type="button" class="blog-rede">Copiar para o LinkedIn</button></li>
             </ul>
             <p class="blog-copiado" role="status" aria-live="polite"></p>
-        </section>
-    @endif
-    @if ($acao)
-        <p><a class="blog-acao" href="{{ $acao['url'] }}">{{ $acao['texto'] }}</a></p>
+        </div>
     @endif
 </div>
 @endsection

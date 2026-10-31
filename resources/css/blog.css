@@ -1,0 +1,23 @@
+/* Sem cor de marca: herda do site. Para ajustar, defina --blog-destaque e
+   --blog-destaque-texto no CSS do sistema. */
+.blog-corpo { margin: 0; color-scheme: light dark; background: Canvas; color: CanvasText; font-family: system-ui, sans-serif; }
+.blog-topo { max-width: 46rem; margin: 0 auto; padding: 1rem; }
+.blog { max-width: 46rem; margin: 0 auto; padding: 2rem 1rem 4rem; line-height: 1.7; overflow-wrap: anywhere; }
+.blog h1 { line-height: 1.2; margin: .5rem 0 1rem; }
+.blog a { color: var(--blog-destaque, LinkText); }
+.blog a:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
+.blog-introducao { font-size: 1.15rem; }
+.blog-meta { font-size: .9rem; opacity: .8; }
+.blog-cartao { padding: 1.25rem 0; border-top: 1px solid color-mix(in srgb, currentColor 25%, transparent); }
+.blog-cartao h2 { margin: 0 0 .5rem; font-size: 1.3rem; line-height: 1.3; }
+.blog-cartao p { margin: .25rem 0; }
+.blog-paginas { display: flex; justify-content: space-between; gap: 1rem; padding-top: 1.5rem; }
+.blog-paginas a { display: inline-flex; align-items: center; min-height: 44px; }
+.blog-imagem, .blog-texto img { max-width: 100%; height: auto; border-radius: .5rem; }
+.blog-texto h2 { margin-top: 2.25rem; line-height: 1.25; }
+.blog-texto h3 { margin-top: 1.75rem; line-height: 1.3; }
+.blog-texto pre { overflow-x: auto; padding: 1rem; border-radius: .5rem; background: color-mix(in srgb, currentColor 10%, transparent); }
+.blog-texto blockquote { margin: 1.5rem 0; padding-left: 1rem; border-left: 3px solid currentColor; }
+.blog-texto table { display: block; overflow-x: auto; border-collapse: collapse; }
+.blog-texto th, .blog-texto td { padding: .5rem .75rem; border: 1px solid color-mix(in srgb, currentColor 25%, transparent); text-align: left; }
+.blog .blog-acao { display: inline-flex; align-items: center; min-height: 44px; margin-top: 1.5rem; padding: .5rem 1.25rem; border: 2px solid currentColor; border-radius: .5rem; font-weight: 600; text-decoration: none; }

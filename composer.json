@@ -1,0 +1,25 @@
+{
+    "name": "urbanodev/blog",
+    "description": "Blog em arquivos Markdown para Laravel: sem banco, sem build, sem painel e sem IA. Escreveu, deu push, está no ar.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.3",
+        "illuminate/console": "^12.0 || ^13.0",
+        "illuminate/http": "^12.0 || ^13.0",
+        "illuminate/routing": "^12.0 || ^13.0",
+        "illuminate/support": "^12.0 || ^13.0",
+        "illuminate/view": "^12.0 || ^13.0",
+        "league/commonmark": "^2.6"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^10.0 || ^11.0",
+        "phpunit/phpunit": "^11.0 || ^12.0"
+    },
+    "autoload": { "psr-4": { "UrbanoDev\\Blog\\": "src/" } },
+    "autoload-dev": { "psr-4": { "UrbanoDev\\Blog\\Tests\\": "tests/" } },
+    "extra": { "laravel": { "providers": ["UrbanoDev\\Blog\\BlogServiceProvider"] } },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "config": { "sort-packages": true }
+}

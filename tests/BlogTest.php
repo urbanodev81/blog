@@ -203,4 +203,42 @@ class BlogTest extends TestCase
 
         $this->get('/blog/capa')->assertOk()->assertSee('Foto: Wikimedia Commons, CC0');
     }
+
+    public function test_secao_vira_chapeu_e_pagina_propria(): void
+    {
+        $this->texto('relato', "secao: Experiência da Equipe\n");
+        $this->texto('guia');
+
+        $this->get('/blog/relato')->assertOk()
+            ->assertSee('Experiência da Equipe')
+            ->assertSee('/blog/secao/experiencia-da-equipe', false)
+            ->assertSee('"articleSection":"Experiência da Equipe"', false);
+
+        $this->get('/blog')->assertOk()
+            ->assertSee('aria-label="Seções"', false)
+            ->assertSee('Título relato')->assertSee('Título guia');
+
+        $this->get('/blog/secao/experiencia-da-equipe')->assertOk()
+            ->assertSee('<h1>Experiência da Equipe</h1>', false)
+            ->assertSee('Título relato')->assertDontSee('Título guia');
+    }
+
+    public function test_secao_sem_texto_publicado_nao_tem_endereco(): void
+    {
+        $this->texto('futuro', "secao: Diário de obra\n", data: now()->addDay()->toDateString());
+        $this->texto('guia');
+
+        $this->get('/blog/secao/diario-de-obra')->assertNotFound();
+        $this->get('/blog/secao/nao-existe')->assertNotFound();
+        $this->get('/blog')->assertDontSee('aria-label="Seções"', false);
+    }
+
+    public function test_secao_entra_no_sitemap_e_nome_invalido_e_erro(): void
+    {
+        $this->texto('relato', "secao: Experiência da Equipe\n");
+        $this->texto('ruim', "secao: ???\n");
+
+        $this->assertArrayHasKey('/blog/secao/experiencia-da-equipe', app(Blog::class)->paginas());
+        $this->assertSame(['secao: use um nome com letras ou números'], app(Blog::class)->erros()['ruim.md']);
+    }
 }

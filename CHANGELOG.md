@@ -2,6 +2,10 @@
 
 ## [Não lançado]
 
+- Campo `secao` (ex.: `Experiência da Equipe`): vira chapéu no texto e na
+  lista, `articleSection` no JSON-LD e página própria em `/<prefixo>/secao/<slug>`,
+  com o sitemap junto. A lista ganha a barra de seções; `Blog::secoes()` serve
+  para o site montar menu. Seção sem texto publicado não tem endereço.
 - Textos em Markdown com cabeçalho, sem banco, servidos em Blade.
 - Comandos `blog:instalar`, `blog:novo` e `blog:conferir`.
 - Rascunho, data futura, sitemap, JSON-LD e botão de ação.

@@ -8,6 +8,11 @@
 .blog a:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
 .blog-introducao { font-size: 1.15rem; }
 .blog-meta { font-size: .9rem; opacity: .8; }
+.blog-chapeu { margin: 0 0 .25rem; font-size: .8rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.blog .blog-chapeu a { text-decoration: none; }
+.blog-secoes { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 1.5rem; }
+.blog .blog-secoes a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 1rem; border: 1px solid currentColor; border-radius: 9999px; text-decoration: none; font-size: .9rem; }
+.blog .blog-secoes a[aria-current="page"] { font-weight: 700; border-width: 2px; }
 .blog-cartao { padding: 1.25rem 0; border-top: 1px solid color-mix(in srgb, currentColor 25%, transparent); }
 .blog-cartao h2 { margin: 0 0 .5rem; font-size: 1.3rem; line-height: 1.3; }
 .blog-cartao p { margin: .25rem 0; }

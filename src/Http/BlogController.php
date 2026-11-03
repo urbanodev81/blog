@@ -13,7 +13,20 @@ class BlogController
 {
     public function index(Request $request, Blog $blog): View
     {
-        $posts = collect($blog->publicados());
+        return $this->listar($request, $blog, collect($blog->publicados()), null);
+    }
+
+    public function secao(Request $request, string $secao, Blog $blog): View
+    {
+        $nome = $blog->secoes()[$secao] ?? null;
+        abort_if($nome === null, 404);
+
+        return $this->listar($request, $blog, collect($blog->daSecao($secao)), $nome);
+    }
+
+    /** @param \Illuminate\Support\Collection<int, Post> $posts */
+    private function listar(Request $request, Blog $blog, \Illuminate\Support\Collection $posts, ?string $secao): View
+    {
         $porPagina = max(1, (int) config('blog.por_pagina'));
         $pagina = max(1, $request->integer('pagina', 1));
 
@@ -27,6 +40,8 @@ class BlogController
                 $pagina,
                 ['path' => $request->url(), 'pageName' => 'pagina'],
             ),
+            'secoes' => $blog->secoes(),
+            'secaoAtual' => $secao,
         ]);
     }
 

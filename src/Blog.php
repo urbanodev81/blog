@@ -33,6 +33,26 @@ class Blog
         return $posts;
     }
 
+    /** @return array<string, string> slug da seção => nome, só das que têm texto publicado, em ordem alfabética */
+    public function secoes(): array
+    {
+        $secoes = [];
+        foreach ($this->publicados() as $post) {
+            if ($post->secao !== null) {
+                $secoes[$post->secaoSlug()] ??= $post->secao;
+            }
+        }
+        asort($secoes, SORT_LOCALE_STRING);
+
+        return $secoes;
+    }
+
+    /** @return list<Post> os publicados da seção, do mais novo para o mais velho */
+    public function daSecao(string $slug): array
+    {
+        return array_values(array_filter($this->publicados(), fn (Post $p) => $p->secaoSlug() === $slug));
+    }
+
     public function achar(string $slug): ?Post
     {
         foreach ($this->publicados() as $post) {
@@ -56,6 +76,9 @@ class Blog
         $paginas = [$prefixo => (string) config('blog.titulo')];
         foreach ($posts as $post) {
             $paginas[$prefixo.'/'.$post->slug] = $post->titulo.' — '.$post->descricao;
+        }
+        foreach ($this->secoes() as $slug => $nome) {
+            $paginas[$prefixo.'/secao/'.$slug] = $nome.' — '.config('blog.titulo');
         }
 
         return $paginas;
@@ -143,6 +166,13 @@ class Blog
         }
 
         $tags = array_values(array_filter(array_map('trim', explode(',', $campos['tags'] ?? '')), fn (string $t) => $t !== ''));
+        if (($campos['secao'] ?? '') !== '' && \Illuminate\Support\Str::slug($campos['secao']) === '') {
+            $problemas[] = 'secao: use um nome com letras ou números';
+        }
+        if (mb_strlen($campos['secao'] ?? '') > 60) {
+            $problemas[] = 'secao: no máximo 60 caracteres';
+        }
+
         if (count($tags) > 8) {
             $problemas[] = 'tags: no máximo 8, separadas por vírgula';
         }
@@ -169,6 +199,7 @@ class Blog
             parceiro: ($campos['parceiro'] ?? '') ?: null,
             parceiroLogo: ($campos['parceiro_logo'] ?? '') ?: null,
             parceiroUrl: ($campos['parceiro_url'] ?? '') ?: null,
+            secao: ($campos['secao'] ?? '') ?: null,
         );
     }
 

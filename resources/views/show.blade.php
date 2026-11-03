@@ -18,6 +18,7 @@
             $post->autor ? ['@'.'type' => 'Person', 'name' => $post->autor] : null,
             $post->parceiro ? array_filter(['@'.'type' => 'Organization', 'name' => $post->parceiro, 'url' => $post->parceiroUrl, 'logo' => $post->parceiroLogo ? url($post->parceiroLogo) : null]) : null,
         ])) ?: null,
+        'articleSection' => $post->secao,
         'keywords' => $post->tags ? implode(', ', $post->tags) : null,
         'image' => $post->imagem ? url($post->imagem) : null,
         'mainEntityOfPage' => url()->current(),
@@ -34,6 +35,9 @@
 <div class="blog">
     <p><a href="{{ route(config('blog.nome_rota').'.index') }}">← {{ config('blog.titulo') }}</a></p>
     <article>
+        @if ($post->secao)
+            <p class="blog-chapeu"><a href="{{ route(config('blog.nome_rota').'.secao', $post->secaoSlug()) }}">{{ $post->secao }}</a></p>
+        @endif
         <h1>{{ $post->titulo }}</h1>
         <p class="blog-meta">
             @if ($post->autor) {{ $post->autor }} · @endif

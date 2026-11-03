@@ -8,6 +8,7 @@ rascunho: sim
 # imagem: /caminho/da/imagem.png
 # imagem_alt: O que a imagem mostra
 # imagem_credito: Foto: Wikimedia Commons, CC0
+# secao: Experiência da Equipe
 # tags: software, gestão, pequenas empresas
 # parceiro: Nome do parceiro
 # parceiro_logo: /caminho/do/logo.png

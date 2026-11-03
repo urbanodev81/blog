@@ -32,6 +32,7 @@ php artisan blog:conferir                       # diz o que está errado
 | `autor` | não | quem escreveu |
 | `imagem`, `imagem_alt` | não | endereço da imagem de capa e o que ela mostra |
 | `imagem_credito` | não | legenda com a origem da foto (ex.: `Foto: Wikimedia Commons, CC0`) |
+| `secao` | não | o nome da seção (ex.: `Experiência da Equipe`); vira chapéu no texto e página `/<prefixo>/secao/experiencia-da-equipe` com os textos dela |
 | `tags` | não | até 8, separadas por vírgula; viram `#Hashtags` no fim do texto e no "Copiar para o LinkedIn" |
 | `parceiro` | não | nome do parceiro que escreveu junto; aparece "Em parceria com" |
 | `parceiro_logo`, `parceiro_url` | não | logo quadrado do parceiro e o site dele |

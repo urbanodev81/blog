@@ -26,7 +26,14 @@ final readonly class Post
         public ?string $parceiro = null,
         public ?string $parceiroLogo = null,
         public ?string $parceiroUrl = null,
+        public ?string $secao = null,
     ) {}
+
+    /** O endereço da seção: "Experiência da Equipe" → experiencia-da-equipe. */
+    public function secaoSlug(): ?string
+    {
+        return $this->secao === null ? null : Str::slug($this->secao);
+    }
 
     /** Agendado = pronto, mas com `data` no futuro: entra no ar sozinho nesse dia. */
     public function agendado(): bool

@@ -7,7 +7,7 @@ Inertia. Não usa banco, build, painel nem IA: escreveu, deu push, está no ar.
 
 ```bash
 composer config repositories.blog vcs https://github.com/urbanodev81/blog
-composer require urbanodev/blog:^0.3
+composer require urbanodev/blog:^0.4
 php artisan blog:instalar
 ```
 
@@ -19,6 +19,9 @@ As páginas já respondem em `/blog`. Além do texto (`/blog/<nome>`) existem:
 | `/blog/tag/<tag>` | os textos de uma tag (campo `tags`); as tags do texto viram link para cá |
 | `/blog/2026` e `/blog/2026/11` | o arquivo do ano e do mês; a lista mostra "Novembro de 2026 (3)" |
 | `/blog?q=docker&secao=…&tag=…&mes=2026-11` | busca e filtro: formulário GET no topo da lista, sem script. A busca ignora acento e maiúscula e procura no título, no resumo, na seção e nas tags |
+
+No fim de cada texto vem o "Leia também": até 3 outros, primeiro os que dividem
+tag ou seção, depois os mais novos (`relacionados` no config; 0 esconde).
 
 O resultado da busca sai com `noindex`. Nome de arquivo que é só um ano
 (`2026.md`) é recusado, porque o endereço é do arquivo daquele ano. Na pasta `resources/blog` ficam o passo a

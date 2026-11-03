@@ -2,6 +2,9 @@
 
 ## [Não lançado]
 
+- "Leia também" no fim de cada texto: até 3 outros (`blog.relacionados`; 0
+  esconde), primeiro os que dividem tag ou seção, depois os mais novos.
+  `Blog::relacionados()` serve para o site usar em outro lugar.
 - Tags clicáveis: cada tag do texto vira link para `/<prefixo>/tag/<slug>`, com
   a lista dos textos dela. Grafias diferentes da mesma tag viram uma só.
 - Arquivo por ano e mês: `/<prefixo>/2026` e `/<prefixo>/2026/11`, e a lista

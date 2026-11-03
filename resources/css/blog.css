@@ -16,6 +16,9 @@
 .blog-cartao { padding: 1.25rem 0; border-top: 1px solid color-mix(in srgb, currentColor 25%, transparent); }
 .blog-cartao h2 { margin: 0 0 .5rem; font-size: 1.3rem; line-height: 1.3; }
 .blog-cartao p { margin: .25rem 0; }
+.blog-relacionados { margin-top: 3rem; }
+.blog-relacionados h2 { margin: 0 0 .5rem; font-size: 1.5rem; line-height: 1.25; }
+.blog-relacionados .blog-cartao h3 { margin: 0 0 .5rem; font-size: 1.2rem; line-height: 1.3; }
 .blog-paginas { display: flex; justify-content: space-between; gap: 1rem; padding-top: 1.5rem; }
 .blog-paginas a { display: inline-flex; align-items: center; min-height: 44px; }
 .blog-imagem, .blog-texto img { max-width: 100%; height: auto; border-radius: .5rem; }

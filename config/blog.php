@@ -28,6 +28,10 @@ return [
     // hashtags das `tags`) aparecem quando o navegador roda o script do pacote.
     'compartilhar' => ['linkedin', 'whatsapp', 'facebook', 'x', 'email'],
 
+    // Quantos textos o "Leia também" mostra no fim de cada texto: primeiro os
+    // do mesmo assunto (tags e seção), depois os mais novos. 0 esconde o bloco.
+    'relacionados' => 3,
+
     // O casco. `blog::layout` serve para sistema Inertia, que não tem layout
     // Blade. Quem tem o seu aponta para ele e diz os nomes das seções.
     'layout' => 'blog::layout',

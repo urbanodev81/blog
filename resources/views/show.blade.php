@@ -93,5 +93,20 @@
             <p class="blog-copiado" role="status" aria-live="polite"></p>
         </div>
     @endif
+    @if ($relacionados)
+        <div class="blog-relacionados" role="group" aria-labelledby="blog-relacionados-titulo">
+            <h2 id="blog-relacionados-titulo">Leia também</h2>
+            @foreach ($relacionados as $outro)
+                <article class="blog-cartao">
+                    @if ($outro->secao)
+                        <p class="blog-chapeu">{{ $outro->secao }}</p>
+                    @endif
+                    <h3><a href="{{ route(config('blog.nome_rota').'.show', $outro->slug) }}">{{ $outro->titulo }}</a></h3>
+                    <p>{{ $outro->descricao }}</p>
+                    <p class="blog-meta"><time datetime="{{ $outro->data->toDateString() }}">{{ $outro->dataPorExtenso() }}</time> · {{ $outro->minutosDeLeitura() }} min de leitura</p>
+                </article>
+            @endforeach
+        </div>
+    @endif
 </div>
 @endsection

@@ -310,6 +310,30 @@ class BlogTest extends TestCase
             ->assertSee('Título c')->assertDontSee('<script>', false)->assertDontSee('noindex', false);
     }
 
+    public function test_leia_tambem_traz_o_mesmo_assunto_antes_dos_mais_novos(): void
+    {
+        $this->texto('atual', "secao: Diário\ntags: Docker, Deploy\n", data: '2026-01-05');
+        $this->texto('duas-tags', "tags: docker, deploy\n", data: '2026-01-01');
+        $this->texto('mesma-secao', "secao: Diário\n", data: '2026-01-02');
+        $this->texto('uma-tag', "tags: Docker\n", data: '2026-01-03');
+        $this->texto('novissimo', data: '2026-01-09');
+        $this->texto('rascunho', "tags: Docker\nrascunho: sim\n");
+
+        $blog = app(Blog::class);
+        $slugs = fn (array $posts) => array_map(fn ($p) => $p->slug, $posts);
+        $this->assertSame(['duas-tags', 'uma-tag', 'mesma-secao'], $slugs($blog->relacionados($blog->achar('atual'))));
+        // Sem assunto em comum, as vagas vão para os mais novos.
+        $this->assertSame(['atual', 'uma-tag'], $slugs($blog->relacionados($blog->achar('novissimo'), 2)));
+        $this->assertSame([], $blog->relacionados($blog->achar('atual'), 0));
+
+        $this->get('/blog/atual')->assertOk()->assertSee('Leia também')
+            ->assertSeeInOrder(['Título duas-tags', 'Título uma-tag', 'Título mesma-secao'])
+            ->assertDontSee('Título novissimo')->assertDontSee('Título rascunho');
+
+        config(['blog.relacionados' => 0]);
+        $this->get('/blog/atual')->assertOk()->assertDontSee('Leia também');
+    }
+
     public function test_paginacao_do_filtro_leva_o_filtro_junto(): void
     {
         config(['blog.por_pagina' => 1]);

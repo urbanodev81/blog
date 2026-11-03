@@ -126,6 +126,39 @@ class Blog
         }));
     }
 
+    /**
+     * "Leia também": primeiro os que dividem tag (2 pontos por tag) ou seção
+     * (1 ponto) com o texto, mais pontos antes e, no empate, o mais novo; as
+     * vagas que sobrarem vão para os mais novos. Nunca o próprio texto.
+     *
+     * @return list<Post>
+     */
+    public function relacionados(Post $post, int $quantos = 3): array
+    {
+        if ($quantos < 1) {
+            return [];
+        }
+        $tags = array_keys($post->tagsComSlug());
+        $pontuados = [];
+        $resto = [];
+        foreach ($this->publicados() as $outro) {
+            if ($outro->slug === $post->slug) {
+                continue;
+            }
+            $pontos = 2 * count(array_intersect($tags, array_keys($outro->tagsComSlug())))
+                + ($post->secao !== null && $outro->secaoSlug() === $post->secaoSlug() ? 1 : 0);
+            if ($pontos > 0) {
+                $pontuados[] = [$pontos, $outro];
+            } else {
+                $resto[] = $outro;
+            }
+        }
+        // publicados() já vem do mais novo ao mais velho, e usort é estável.
+        usort($pontuados, fn (array $a, array $b) => $b[0] <=> $a[0]);
+
+        return array_slice([...array_column($pontuados, 1), ...$resto], 0, $quantos);
+    }
+
     public function achar(string $slug): ?Post
     {
         foreach ($this->publicados() as $post) {

@@ -141,6 +141,7 @@ class BlogController
             'acao' => $this->acao($post),
             'redes' => $this->redes($post, url()->current()),
             'textoParaRedes' => $post->textoParaRedes(url()->current()),
+            'relacionados' => $blog->relacionados($post, (int) config('blog.relacionados', 3)),
         ]);
     }
 

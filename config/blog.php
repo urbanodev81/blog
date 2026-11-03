@@ -33,6 +33,9 @@ return [
     'layout' => 'blog::layout',
     // `imagem` é opcional: se o layout tiver uma seção para a imagem da prévia
     // nas redes (og:image), dê o nome dela e o texto com `imagem` a preenche.
-    'secoes' => ['titulo' => 'titulo', 'descricao' => 'descricao', 'conteudo' => 'conteudo', 'imagem' => null],
+    // `robots` também: se o layout tiver uma seção para a meta robots, o
+    // resultado da busca a preenche com "noindex, follow". Sem ela, o pacote
+    // põe a meta na pilha do cabeçalho.
+    'secoes' => ['titulo' => 'titulo', 'descricao' => 'descricao', 'conteudo' => 'conteudo', 'imagem' => null, 'robots' => null],
     'pilha_cabecalho' => 'blog_cabecalho',
 ];

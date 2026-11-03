@@ -49,10 +49,44 @@ final readonly class Post
      */
     public function hashtags(): array
     {
-        return array_values(array_unique(array_filter(array_map(
-            fn (string $tag) => ($limpa = Str::studly(preg_replace('/[^a-z0-9 ]+/i', ' ', Str::ascii($tag)))) === '' ? null : '#'.$limpa,
-            $this->tags,
-        ))));
+        return array_values(array_unique(array_filter(array_map(self::hashtag(...), $this->tags))));
+    }
+
+    public static function hashtag(string $tag): ?string
+    {
+        $limpa = Str::studly(preg_replace('/[^a-z0-9 ]+/i', ' ', Str::ascii($tag)));
+
+        return $limpa === '' ? null : '#'.$limpa;
+    }
+
+    /**
+     * As tags com endereço: slug => nome ("Deploy automático" → deploy-automatico).
+     * Duas grafias da mesma tag viram uma só, com o nome da primeira.
+     *
+     * @return array<string, string>
+     */
+    public function tagsComSlug(): array
+    {
+        $tags = [];
+        foreach ($this->tags as $tag) {
+            if (($slug = Str::slug($tag)) !== '') {
+                $tags[$slug] ??= $tag;
+            }
+        }
+
+        return $tags;
+    }
+
+    /** "3 de novembro de 2026", sem depender do locale do servidor. */
+    public function dataPorExtenso(): string
+    {
+        return $this->data->day.' de '.mb_strtolower(Blog::MESES[$this->data->month]).' de '.$this->data->year;
+    }
+
+    /** Título, resumo, seção e tags, em minúsculas e sem acento: é onde a busca procura. */
+    public function textoDeBusca(): string
+    {
+        return Blog::normalizar(implode(' ', [$this->titulo, $this->descricao, $this->secao ?? '', ...$this->tags]));
     }
 
     /** Texto pronto para colar num post do LinkedIn: título, resumo, endereço e hashtags. */

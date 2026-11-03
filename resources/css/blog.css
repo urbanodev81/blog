@@ -30,7 +30,24 @@
 .blog-figura figcaption { margin-top: .4rem; font-size: .8rem; opacity: .75; }
 .blog-parceiro { display: flex; align-items: center; gap: .75rem; margin: 1rem 0; }
 .blog-parceiro img { width: 48px; height: 48px; object-fit: contain; border-radius: .5rem; background: #fff; padding: 4px; }
-.blog-tags { margin-top: 2rem; font-weight: 600; color: var(--blog-destaque, LinkText); word-spacing: .35rem; }
+.blog-tags { display: flex; flex-wrap: wrap; gap: 0 1rem; margin: 2rem 0 0; padding: 0; list-style: none; font-weight: 600; }
+.blog .blog-tags a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
+.blog .blog-tags a:hover { text-decoration: underline; }
+.blog-filtro { display: flex; flex-wrap: wrap; align-items: flex-end; gap: .75rem 1rem; margin: 0 0 1.5rem; padding: 1rem; border: 1px solid color-mix(in srgb, currentColor 25%, transparent); border-radius: .5rem; }
+.blog-filtro > div { display: flex; flex-direction: column; gap: .25rem; min-width: 10rem; flex: 1 1 10rem; }
+.blog-filtro .blog-filtro-busca { flex: 2 1 16rem; }
+.blog-filtro label { font-size: .85rem; font-weight: 600; }
+.blog-filtro input, .blog-filtro select, .blog-filtro button { min-height: 44px; padding: .4rem .75rem; border: 1px solid color-mix(in srgb, currentColor 40%, transparent); border-radius: .4rem; background: transparent; color: inherit; font: inherit; }
+.blog-filtro select option { color: CanvasText; background: Canvas; }
+.blog-filtro input:focus-visible, .blog-filtro select:focus-visible, .blog-filtro button:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
+.blog .blog-filtro-acoes { flex-direction: row; align-items: center; gap: 1rem; flex: 0 0 auto; min-width: 0; }
+.blog-filtro button { border: 2px solid currentColor; font-weight: 600; cursor: pointer; }
+.blog-filtro-acoes a { display: inline-flex; align-items: center; min-height: 44px; }
+.blog-resultado { margin: 0 0 1rem; font-weight: 600; }
+.blog-arquivo { margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid color-mix(in srgb, currentColor 25%, transparent); }
+.blog-arquivo h2 { margin: 0 0 .5rem; font-size: 1.1rem; }
+.blog-arquivo ul { margin: 0; padding: 0; list-style: none; }
+.blog-arquivo a { display: inline-flex; align-items: center; min-height: 44px; }
 .blog-compartilhar { margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid color-mix(in srgb, currentColor 25%, transparent); }
 .blog-compartilhar-titulo { margin: 0 0 .75rem; font-weight: 600; }
 .blog-compartilhar ul { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0; padding: 0; list-style: none; }

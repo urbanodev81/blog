@@ -2,6 +2,20 @@
 
 ## [Não lançado]
 
+- Tags clicáveis: cada tag do texto vira link para `/<prefixo>/tag/<slug>`, com
+  a lista dos textos dela. Grafias diferentes da mesma tag viram uma só.
+- Arquivo por ano e mês: `/<prefixo>/2026` e `/<prefixo>/2026/11`, e a lista
+  ganha o bloco "Arquivo" com "Novembro de 2026 (3)". A data aparece no cartão
+  e no texto, por extenso e sem depender do locale do servidor.
+- Busca e filtro no topo da lista: palavra (título, resumo, seção e tags, sem
+  ligar para acento nem maiúscula), seção, tag e mês. É formulário GET comum,
+  sem script; a paginação leva o filtro junto; valor fora do formato é
+  ignorado. O resultado sai com `noindex` (pela seção `secoes.robots` do layout,
+  quando houver, ou pela pilha do cabeçalho).
+- Tags e meses entram no sitemap (`Blog::paginas()`); `Blog::tags()`,
+  `Blog::meses()` e `Blog::filtrar()` servem para o site montar menu.
+- Arquivo com nome de ano (`2026.md`) vira erro no `blog:conferir`.
+
 - Campo `secao` (ex.: `Experiência da Equipe`): vira chapéu no texto e na
   lista, `articleSection` no JSON-LD e página própria em `/<prefixo>/secao/<slug>`,
   com o sitemap junto. A lista ganha a barra de seções; `Blog::secoes()` serve

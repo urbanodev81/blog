@@ -4,6 +4,7 @@ namespace UrbanoDev\Blog;
 
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Throwable;
 
 /**
@@ -14,6 +15,14 @@ use Throwable;
 class Blog
 {
     public const SLUG = '[a-z0-9]+(?:-[a-z0-9]+)*';
+
+    public const MESES = [1 => 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+    /** A busca não liga para maiúscula nem acento: "Implantação" acha "implantacao". */
+    public static function normalizar(string $texto): string
+    {
+        return Str::lower(Str::ascii($texto));
+    }
 
     /** @return list<Post> os publicados, do mais novo para o mais velho */
     public function publicados(): array
@@ -53,6 +62,70 @@ class Blog
         return array_values(array_filter($this->publicados(), fn (Post $p) => $p->secaoSlug() === $slug));
     }
 
+    /** @return array<string, string> slug da tag => nome (a grafia do texto mais novo), só das que têm texto publicado, em ordem alfabética */
+    public function tags(): array
+    {
+        $tags = [];
+        foreach ($this->publicados() as $post) {
+            $tags += $post->tagsComSlug();
+        }
+        uasort($tags, fn (string $a, string $b) => strcmp(self::normalizar($a), self::normalizar($b)));
+
+        return $tags;
+    }
+
+    /**
+     * Os meses com texto publicado, do mais novo ao mais velho.
+     *
+     * @return list<array{ano: int, mes: int, nome: string, total: int}>
+     */
+    public function meses(): array
+    {
+        $meses = [];
+        foreach ($this->publicados() as $post) {
+            $chave = $post->data->format('Y-m');
+            $meses[$chave] ??= ['ano' => $post->data->year, 'mes' => $post->data->month, 'nome' => self::MESES[$post->data->month].' de '.$post->data->year, 'total' => 0];
+            $meses[$chave]['total']++;
+        }
+
+        return array_values($meses);
+    }
+
+    /**
+     * Os publicados que passam em todos os filtros dados. Filtro null não
+     * filtra. Na busca, cada palavra tem de aparecer no título, no resumo, na
+     * seção ou nas tags.
+     *
+     * @return list<Post>
+     */
+    public function filtrar(?string $secao = null, ?string $tag = null, ?int $ano = null, ?int $mes = null, ?string $busca = null): array
+    {
+        $palavras = preg_split('/\s+/', self::normalizar(trim((string) $busca)), -1, PREG_SPLIT_NO_EMPTY);
+
+        return array_values(array_filter($this->publicados(), function (Post $p) use ($secao, $tag, $ano, $mes, $palavras) {
+            if ($secao !== null && $p->secaoSlug() !== $secao) {
+                return false;
+            }
+            if ($tag !== null && ! array_key_exists($tag, $p->tagsComSlug())) {
+                return false;
+            }
+            if ($ano !== null && $p->data->year !== $ano) {
+                return false;
+            }
+            if ($mes !== null && $p->data->month !== $mes) {
+                return false;
+            }
+            $onde = $palavras === [] ? '' : $p->textoDeBusca();
+            foreach ($palavras as $palavra) {
+                if (! str_contains($onde, $palavra)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }));
+    }
+
     public function achar(string $slug): ?Post
     {
         foreach ($this->publicados() as $post) {
@@ -79,6 +152,12 @@ class Blog
         }
         foreach ($this->secoes() as $slug => $nome) {
             $paginas[$prefixo.'/secao/'.$slug] = $nome.' — '.config('blog.titulo');
+        }
+        foreach ($this->tags() as $slug => $nome) {
+            $paginas[$prefixo.'/tag/'.$slug] = 'Textos sobre '.$nome.' — '.config('blog.titulo');
+        }
+        foreach ($this->meses() as $mes) {
+            $paginas[$prefixo.'/'.$mes['ano'].'/'.sprintf('%02d', $mes['mes'])] = $mes['nome'].' — '.config('blog.titulo');
         }
 
         return $paginas;
@@ -123,6 +202,9 @@ class Blog
 
         if (preg_match('/^'.self::SLUG.'$/D', $slug) !== 1) {
             $problemas[] = 'nome do arquivo: use só letras minúsculas sem acento, números e hífen';
+        }
+        if (preg_match('/^\d{4}$/', $slug) === 1) {
+            $problemas[] = 'nome do arquivo: não pode ser só um ano, porque /2026 é o arquivo daquele ano';
         }
         if (preg_match('/^---\n(.*?)\n---\n?(.*)$/s', $texto, $partes) !== 1) {
             $problemas[] = 'falta o cabeçalho entre duas linhas ---';

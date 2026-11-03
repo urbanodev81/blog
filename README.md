@@ -7,11 +7,21 @@ Inertia. Não usa banco, build, painel nem IA: escreveu, deu push, está no ar.
 
 ```bash
 composer config repositories.blog vcs https://github.com/urbanodev81/blog
-composer require urbanodev/blog:^0.1
+composer require urbanodev/blog:^0.3
 php artisan blog:instalar
 ```
 
-As páginas já respondem em `/blog`. Na pasta `resources/blog` ficam o passo a
+As páginas já respondem em `/blog`. Além do texto (`/blog/<nome>`) existem:
+
+| Endereço | O que mostra |
+|---|---|
+| `/blog/secao/<seção>` | os textos de uma seção (campo `secao`) |
+| `/blog/tag/<tag>` | os textos de uma tag (campo `tags`); as tags do texto viram link para cá |
+| `/blog/2026` e `/blog/2026/11` | o arquivo do ano e do mês; a lista mostra "Novembro de 2026 (3)" |
+| `/blog?q=docker&secao=…&tag=…&mes=2026-11` | busca e filtro: formulário GET no topo da lista, sem script. A busca ignora acento e maiúscula e procura no título, no resumo, na seção e nas tags |
+
+O resultado da busca sai com `noindex`. Nome de arquivo que é só um ano
+(`2026.md`) é recusado, porque o endereço é do arquivo daquele ano. Na pasta `resources/blog` ficam o passo a
 passo de quem escreve (`_LEIA.md`) e o modelo (`_MODELO.md`).
 
 ## Configurar

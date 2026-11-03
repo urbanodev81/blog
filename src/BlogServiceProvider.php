@@ -37,6 +37,9 @@ class BlogServiceProvider extends ServiceProvider
                 Route::get('/estilo.css', [BlogController::class, 'estilo'])->name('estilo');
                 Route::get('/compartilhar.js', [BlogController::class, 'script'])->name('script');
                 Route::get('/secao/{secao}', [BlogController::class, 'secao'])->where('secao', Blog::SLUG)->name('secao');
+                Route::get('/tag/{tag}', [BlogController::class, 'tag'])->where('tag', Blog::SLUG)->name('tag');
+                Route::get('/{ano}/{mes}', [BlogController::class, 'arquivo'])->where(['ano' => '\d{4}', 'mes' => '0[1-9]|1[0-2]'])->name('mes');
+                Route::get('/{ano}', [BlogController::class, 'arquivo'])->where('ano', '\d{4}')->name('ano');
                 Route::get('/{slug}', [BlogController::class, 'show'])->where('slug', Blog::SLUG)->name('show');
             });
     }

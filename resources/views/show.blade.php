@@ -41,7 +41,8 @@
         <h1>{{ $post->titulo }}</h1>
         <p class="blog-meta">
             @if ($post->autor) {{ $post->autor }} · @endif
-            {{ $post->minutosDeLeitura() }} min de leitura
+            <time datetime="{{ $post->data->toDateString() }}">{{ $post->dataPorExtenso() }}</time>
+            · {{ $post->minutosDeLeitura() }} min de leitura
             @if ($post->atualizado) · revisto em <time datetime="{{ $post->atualizado->toDateString() }}">{{ $post->atualizado->format('d/m/Y') }}</time> @endif
         </p>
         @if ($post->parceiro)
@@ -67,8 +68,12 @@
             </figure>
         @endif
         <div class="blog-texto">{!! $post->html() !!}</div>
-        @if ($post->hashtags())
-            <p class="blog-tags">{{ implode(' ', $post->hashtags()) }}</p>
+        @if ($post->tagsComSlug())
+            <ul class="blog-tags" aria-label="Tags">
+                @foreach ($post->tagsComSlug() as $slug => $nome)
+                    <li><a href="{{ route(config('blog.nome_rota').'.tag', $slug) }}">{{ \UrbanoDev\Blog\Post::hashtag($nome) ?? $nome }}</a></li>
+                @endforeach
+            </ul>
         @endif
     </article>
     @if ($acao)

@@ -2,6 +2,9 @@
 
 ## [Não lançado]
 
+- Estilo para `figure`/`figcaption` no texto e para `.blog-video` (iframe em
+  16:9, na largura do texto), que é o que a fonte do banco do urbisdev gera
+  para vídeo do YouTube ou do Vimeo (v0.5.1).
 - Fontes de texto (v0.5.0): o contrato `Fonte` e a config `blog.fontes`, em
   ordem de prioridade. O padrão continua sendo só `FonteDeArquivos`, e quem não
   mexe na config não vê mudança nenhuma. Uma fonte do sistema (banco) entra na

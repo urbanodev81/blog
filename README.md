@@ -62,6 +62,20 @@ ela vai para o log e o blog segue com as outras, então os `.md` continuam sendo
 reserva. O `Post` que traz `htmlPronto` é impresso como veio: **o saneamento
 desse HTML é da fonte**, não do pacote.
 
+**Bloco próprio dentro das páginas do blog (comentários, "ajudou?", mais
+lidos, botão de contato):** o pacote não tem banco, mas inclui views do sistema
+em três pontos fixos:
+
+```php
+'encaixes' => [
+    'fim_do_texto' => ['blog.leitores'],   // depois de "Compartilhar"; recebe $post
+    'fim_do_indice' => ['blog.mais-lidos'], // depois dos cartões; recebe $inicio
+    'pagina' => ['blog.whatsapp'],          // fecha toda página; $post é null na lista
+],
+```
+
+`$inicio` só é `true` em `/blog` sem filtro, na página 1.
+
 ## Quando não usar
 
 Em blog que o cliente edita pelo painel, com um conteúdo por tenant, como os do

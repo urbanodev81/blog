@@ -106,6 +106,10 @@
         </article>
     @endforeach
 
+    @foreach ((array) config('blog.encaixes.fim_do_indice', []) as $encaixe)
+        @include($encaixe, ['inicio' => $inicio])
+    @endforeach
+
     @if ($meses === [])
         <p>Nenhum texto publicado ainda.</p>
     @endif
@@ -127,5 +131,9 @@
             </ul>
         </nav>
     @endif
+
+    @foreach ((array) config('blog.encaixes.pagina', []) as $encaixe)
+        @include($encaixe, ['post' => null])
+    @endforeach
 </div>
 @endsection

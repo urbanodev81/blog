@@ -2,6 +2,11 @@
 
 ## [Não lançado]
 
+- Encaixes (v0.6.0): config `blog.encaixes` com três pontos fixos onde o
+  sistema inclui as próprias views (`fim_do_texto`, `fim_do_indice` e
+  `pagina`). É por eles que um sistema com banco põe comentários, "ajudou?",
+  mais lidos ou botão de contato, sem o pacote ganhar banco. O padrão é vazio,
+  e quem não mexe na config não vê mudança.
 - Estilo para `figure`/`figcaption` no texto e para `.blog-video` (iframe em
   16:9, na largura do texto), que é o que a fonte do banco do urbisdev gera
   para vídeo do YouTube ou do Vimeo (v0.5.1).

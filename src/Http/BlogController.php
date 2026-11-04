@@ -128,6 +128,9 @@ class BlogController
             'filtros' => $contexto['filtros'] ?? [],
             'resultado' => $contexto['resultado'] ?? null,
             'indexar' => $contexto['indexar'] ?? true,
+            // A lista "de entrada": /blog sem filtro, página 1. É onde o
+            // sistema costuma pôr bloco próprio (mais lidos, destaque).
+            'inicio' => $request->routeIs(config('blog.nome_rota').'.index') && ($contexto['filtros'] ?? []) === [] && $pagina === 1,
         ]);
     }
 

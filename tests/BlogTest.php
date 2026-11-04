@@ -47,6 +47,27 @@ class BlogTest extends TestCase
         $this->get('/blog/novo')->assertOk()->assertSee('Corpo do texto.')->assertSee('application/ld+json', false);
     }
 
+    public function test_encaixes_do_sistema_entram_nos_pontos_fixos(): void
+    {
+        $views = sys_get_temp_dir().'/blog-views-'.uniqid();
+        mkdir($views);
+        file_put_contents("{$views}/fim-texto.blade.php", 'ENCAIXE-TEXTO {{ $post->slug }}');
+        file_put_contents("{$views}/fim-indice.blade.php", 'ENCAIXE-INDICE {{ $inicio ? "inicio" : "filtrado" }}');
+        file_put_contents("{$views}/pagina.blade.php", 'ENCAIXE-PAGINA {{ $post?->slug ?? "lista" }}');
+        $this->app['view']->addNamespace('teste', $views);
+        $this->texto('um');
+
+        // Sem config, nada aparece: os outros sites não mudam.
+        $this->get('/blog/um')->assertDontSee('ENCAIXE');
+
+        config(['blog.encaixes' => ['fim_do_texto' => ['teste::fim-texto'], 'fim_do_indice' => ['teste::fim-indice'], 'pagina' => ['teste::pagina']]]);
+
+        $this->get('/blog/um')->assertSee('ENCAIXE-TEXTO um')->assertSee('ENCAIXE-PAGINA um')->assertDontSee('ENCAIXE-INDICE');
+        $this->get('/blog')->assertSee('ENCAIXE-INDICE inicio')->assertSee('ENCAIXE-PAGINA lista');
+        $this->get('/blog?q=um')->assertSee('ENCAIXE-INDICE filtrado');
+        File::deleteDirectory($views);
+    }
+
     public function test_rascunho_e_data_futura_nao_tem_endereco(): void
     {
         $this->texto('oculto', "rascunho: sim\n");

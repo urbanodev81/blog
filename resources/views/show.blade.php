@@ -93,6 +93,9 @@
             <p class="blog-copiado" role="status" aria-live="polite"></p>
         </div>
     @endif
+    @foreach ((array) config('blog.encaixes.fim_do_texto', []) as $encaixe)
+        @include($encaixe, ['post' => $post])
+    @endforeach
     @if ($relacionados)
         <div class="blog-relacionados" role="group" aria-labelledby="blog-relacionados-titulo">
             <h2 id="blog-relacionados-titulo">Leia também</h2>
@@ -108,5 +111,8 @@
             @endforeach
         </div>
     @endif
+    @foreach ((array) config('blog.encaixes.pagina', []) as $encaixe)
+        @include($encaixe, ['post' => $post])
+    @endforeach
 </div>
 @endsection

@@ -37,6 +37,15 @@ return [
     // do mesmo assunto (tags e seção), depois os mais novos. 0 esconde o bloco.
     'relacionados' => 3,
 
+    // Views do sistema incluídas em pontos fixos das páginas do blog. É por
+    // aqui que o sistema com banco põe o que o pacote não tem (comentários,
+    // "ajudou?", mais lidos, botão de contato), sem o pacote ganhar banco.
+    // `fim_do_texto` vem depois de "Compartilhar" e recebe `$post`;
+    // `fim_do_indice` vem depois dos cartões e recebe `$inicio` (true só em
+    // /<prefixo> sem filtro, página 1); `pagina` fecha toda página do blog e
+    // recebe `$post` (null na lista). Vazio = nada muda.
+    'encaixes' => ['fim_do_texto' => [], 'fim_do_indice' => [], 'pagina' => []],
+
     // O casco. `blog::layout` serve para sistema Inertia, que não tem layout
     // Blade. Quem tem o seu aponta para ele e diz os nomes das seções.
     'layout' => 'blog::layout',

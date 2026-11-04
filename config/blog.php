@@ -9,6 +9,11 @@ return [
 
     'middleware' => ['web'],
 
+    // De onde vêm os textos, em ordem: o mesmo slug em duas fontes fica com o
+    // da primeira. Sistema com banco põe a sua fonte (implementa
+    // UrbanoDev\Blog\Fonte) antes desta, e os .md seguem valendo de reserva.
+    'fontes' => [UrbanoDev\Blog\FonteDeArquivos::class],
+
     // Onde moram os .md. Arquivo que começa com `_` não vira página.
     'pasta' => resource_path('blog'),
 

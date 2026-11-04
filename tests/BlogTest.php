@@ -27,6 +27,8 @@ class BlogTest extends TestCase
 
     protected function tearDown(): void
     {
+        FonteDeTeste::$posts = [];
+        FonteDeTeste::$quebrar = false;
         File::deleteDirectory($this->pasta);
         parent::tearDown();
     }
@@ -342,5 +344,62 @@ class BlogTest extends TestCase
 
         $this->get('/blog?tag=docker')->assertOk()->assertSee('tag=docker&amp;pagina=2', false);
         $this->get('/blog/tag/docker')->assertOk()->assertSee('/blog/tag/docker?pagina=2', false);
+    }
+
+    public function test_fonte_extra_vem_antes_e_ganha_o_mesmo_slug(): void
+    {
+        $this->texto('repetido');
+        $this->texto('so-arquivo');
+        FonteDeTeste::$posts = [FonteDeTeste::post('repetido', '<p>Do <strong>banco</strong>.</p>'), FonteDeTeste::post('so-banco', '<p>Só no banco.</p>')];
+        config()->set('blog.fontes', [FonteDeTeste::class, \UrbanoDev\Blog\FonteDeArquivos::class]);
+
+        $this->get('/blog')->assertOk()->assertSee('Título so-arquivo')->assertSee('Banco so-banco');
+        $this->get('/blog/repetido')->assertOk()->assertSee('<p>Do <strong>banco</strong>.</p>', false)->assertDontSee('Corpo do texto.');
+        $this->assertSame('teste', app(Blog::class)->achar('repetido')->fonte);
+        $this->assertSame('arquivo', app(Blog::class)->achar('so-arquivo')->fonte);
+    }
+
+    public function test_fonte_que_quebra_nao_derruba_o_blog(): void
+    {
+        $this->texto('sobrevive');
+        FonteDeTeste::$quebrar = true;
+        config()->set('blog.fontes', [FonteDeTeste::class, \UrbanoDev\Blog\FonteDeArquivos::class]);
+
+        $this->get('/blog')->assertOk()->assertSee('Título sobrevive');
+        $this->get('/blog/sobrevive')->assertOk();
+    }
+
+    public function test_minutos_de_leitura_contam_o_html_pronto(): void
+    {
+        $post = FonteDeTeste::post('longo', '<p>'.str_repeat('palavra ', 450).'</p><p>fim</p>');
+
+        $this->assertSame(3, $post->minutosDeLeitura());
+    }
+}
+
+/** Fonte de mentira para os testes: devolve o que estiver em $posts. */
+class FonteDeTeste implements \UrbanoDev\Blog\Fonte
+{
+    /** @var list<\UrbanoDev\Blog\Post> */
+    public static array $posts = [];
+
+    public static bool $quebrar = false;
+
+    public function ler(): array
+    {
+        if (self::$quebrar) {
+            throw new \RuntimeException('banco fora');
+        }
+
+        return ['posts' => self::$posts, 'erros' => []];
+    }
+
+    public static function post(string $slug, string $html): \UrbanoDev\Blog\Post
+    {
+        return new \UrbanoDev\Blog\Post(
+            slug: $slug, titulo: 'Banco '.$slug, descricao: 'Resumo', data: \Carbon\CarbonImmutable::parse('2026-01-05'),
+            atualizado: null, autor: null, imagem: null, imagemAlt: null, imagemCredito: null, rascunho: false,
+            acaoTexto: null, acaoUrl: null, corpo: '', htmlPronto: $html, fonte: 'teste',
+        );
     }
 }

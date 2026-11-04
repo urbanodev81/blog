@@ -27,6 +27,10 @@ final readonly class Post
         public ?string $parceiroLogo = null,
         public ?string $parceiroUrl = null,
         public ?string $secao = null,
+        // HTML já saneado pela fonte (a do banco, por exemplo). Sem ele, o corpo é Markdown.
+        public ?string $htmlPronto = null,
+        // Quem trouxe o texto: 'arquivo' na fonte do pacote; a fonte do sistema diz a sua.
+        public string $fonte = 'arquivo',
     ) {}
 
     /** O endereço da seção: "Experiência da Equipe" → experiencia-da-equipe. */
@@ -100,14 +104,19 @@ final readonly class Post
         return ! $this->rascunho && $this->data->startOfDay()->lte(CarbonImmutable::now());
     }
 
-    /** HTML cru do arquivo é removido: o texto só entra por Markdown. */
+    /**
+     * HTML cru do arquivo é removido: o texto de arquivo só entra por Markdown.
+     * O `htmlPronto` vem saneado pela fonte que o trouxe e sai como está.
+     */
     public function html(): string
     {
-        return (string) Str::markdown($this->corpo, ['html_input' => 'strip', 'allow_unsafe_links' => false]);
+        return $this->htmlPronto ?? (string) Str::markdown($this->corpo, ['html_input' => 'strip', 'allow_unsafe_links' => false]);
     }
 
     public function minutosDeLeitura(): int
     {
-        return max(1, (int) ceil(str_word_count(strip_tags($this->corpo), 0, 'À..ÿ') / 200));
+        $texto = $this->htmlPronto === null ? $this->corpo : html_entity_decode(strip_tags(str_replace('<', ' <', $this->htmlPronto)), ENT_QUOTES | ENT_HTML5);
+
+        return max(1, (int) ceil(str_word_count(strip_tags($texto), 0, 'À..ÿ') / 200));
     }
 }

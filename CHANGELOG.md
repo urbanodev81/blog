@@ -2,6 +2,13 @@
 
 ## [Não lançado]
 
+- Fontes de texto (v0.5.0): o contrato `Fonte` e a config `blog.fontes`, em
+  ordem de prioridade. O padrão continua sendo só `FonteDeArquivos`, e quem não
+  mexe na config não vê mudança nenhuma. Uma fonte do sistema (banco) entra na
+  frente: o mesmo slug fica com a primeira, e fonte que quebra vai para o log
+  sem derrubar o blog. O `Post` ganhou `htmlPronto` (HTML que a fonte já
+  saneou) e `fonte` (quem trouxe o texto), e o tempo de leitura conta as
+  palavras desse HTML.
 - "Leia também" no fim de cada texto: até 3 outros (`blog.relacionados`; 0
   esconde), primeiro os que dividem tag ou seção, depois os mais novos.
   `Blog::relacionados()` serve para o site usar em outro lugar.

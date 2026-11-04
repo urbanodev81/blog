@@ -49,6 +49,19 @@ pura e não passa pelo Vue. Para usar a cor do sistema, defina
 
 **Rotas com o mesmo nome ou endereço:** troque `nome_rota` e `prefixo`.
 
+**Outra fonte além dos `.md` (banco, por exemplo):** implemente
+`UrbanoDev\Blog\Fonte` (um método, `ler()`, que devolve os `Post`) e ponha a
+classe antes da de arquivos:
+
+```php
+'fontes' => [App\Blog\FonteDoBanco::class, UrbanoDev\Blog\FonteDeArquivos::class],
+```
+
+O mesmo slug nas duas fica com o da primeira. Se uma fonte quebrar (banco fora),
+ela vai para o log e o blog segue com as outras, então os `.md` continuam sendo a
+reserva. O `Post` que traz `htmlPronto` é impresso como veio: **o saneamento
+desse HTML é da fonte**, não do pacote.
+
 ## Quando não usar
 
 Em blog que o cliente edita pelo painel, com um conteúdo por tenant, como os do
@@ -57,7 +70,8 @@ instalação.
 
 ## Segurança
 
-O texto só entra por Markdown: HTML cru e link `javascript:` são removidos. O
+O texto de arquivo só entra por Markdown: HTML cru e link `javascript:` são
+removidos. HTML de outra fonte (`htmlPronto`) chega saneado por ela. O
 endereço só escolhe um item da lista lida da pasta, nunca monta caminho de
 arquivo. Arquivo com erro fica fora do ar e não afeta o resto do site.
 

@@ -67,7 +67,8 @@
                 @endif
             </figure>
         @endif
-        <div class="blog-texto">{!! $post->html() !!}</div>
+        @php($html = $post->html())
+        <div class="blog-texto">{!! $html !!}</div>
         @if ($post->tagsComSlug())
             <ul class="blog-tags" aria-label="Tags">
                 @foreach ($post->tagsComSlug() as $slug => $nome)
@@ -110,6 +111,13 @@
                 </article>
             @endforeach
         </div>
+    @endif
+    @if (str_contains($html, 'data-ampliar="sim"'))
+        <dialog class="blog-foto-ampliada" id="blog-foto-ampliada" aria-label="Foto ampliada">
+            <button type="button" aria-label="Fechar a foto">×</button>
+            <img alt="">
+            <p hidden></p>
+        </dialog>
     @endif
     @foreach ((array) config('blog.encaixes.pagina', []) as $encaixe)
         @include($encaixe, ['post' => $post])

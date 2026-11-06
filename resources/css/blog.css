@@ -64,3 +64,27 @@
 .blog-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .blog-cartao-parceiro { display: inline-flex; align-items: center; gap: .4rem; }
 .blog-cartao-parceiro img { width: 20px; height: 20px; object-fit: contain; }
+/* Foto dentro do texto (v0.7.0): o editor do sistema grava data-tamanho (pequena|media),
+   data-alinhar (esquerda|centro|direita) e data-ampliar="sim". Sem atributo = inteira.
+   Esquerda/direita põem o texto ao lado da foto; no celular a foto volta ao centro, porque
+   em 390 px uma coluna ao lado de uma foto vira três palavras por linha. */
+.blog-texto img[data-tamanho="pequena"] { width: 33%; }
+.blog-texto img[data-tamanho="media"] { width: 50%; }
+.blog-texto img[data-alinhar="centro"] { display: block; margin-inline: auto; }
+.blog-texto img[data-alinhar="esquerda"] { float: left; margin: .35rem 1.5rem 1rem 0; }
+.blog-texto img[data-alinhar="direita"] { float: right; margin: .35rem 0 1rem 1.5rem; }
+.blog-texto::after { content: ''; display: table; clear: both; }
+.blog-texto h2, .blog-texto h3, .blog-texto hr, .blog-texto pre, .blog-texto figure { clear: both; }
+.blog-texto img[data-ampliar="sim"] { cursor: zoom-in; }
+.blog-texto img[data-ampliar="sim"]:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.blog-foto-ampliada { position: fixed; inset: 0; margin: auto; width: fit-content; height: fit-content; padding: 0; border: 0; background: transparent; max-width: 96vw; max-height: 94vh; overflow: visible; }
+.blog-foto-ampliada::backdrop { background: rgba(5, 8, 15, .88); }
+.blog-foto-ampliada img { display: block; max-width: 96vw; max-height: 88vh; width: auto; height: auto; border-radius: .5rem; cursor: zoom-out; }
+.blog-foto-ampliada p { margin: .6rem 0 0; color: #e8ecf3; font-size: .95rem; text-align: center; }
+.blog-foto-ampliada button { position: fixed; top: .75rem; right: .75rem; width: 2.75rem; height: 2.75rem; border: 0; border-radius: 999px; background: rgba(255, 255, 255, .14); color: #fff; font-size: 1.6rem; line-height: 1; cursor: pointer; }
+.blog-foto-ampliada button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+@media (max-width: 600px) {
+    .blog-texto img[data-alinhar="esquerda"], .blog-texto img[data-alinhar="direita"] { float: none; display: block; margin: 1rem auto; }
+    .blog-texto img[data-tamanho="pequena"] { width: 60%; }
+    .blog-texto img[data-tamanho="media"] { width: 100%; }
+}

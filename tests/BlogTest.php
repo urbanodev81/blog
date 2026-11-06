@@ -396,6 +396,23 @@ class BlogTest extends TestCase
 
         $this->assertSame(3, $post->minutosDeLeitura());
     }
+
+    public function test_foto_ao_lado_do_texto_e_ampliar_vem_do_pacote(): void
+    {
+        FonteDeTeste::$posts = [
+            FonteDeTeste::post('com-foto', '<p><img src="/a.webp" alt="Painel" data-tamanho="media" data-alinhar="esquerda" data-ampliar="sim">Texto ao lado.</p>'),
+            FonteDeTeste::post('sem-ampliar', '<p><img src="/b.webp" alt="" data-alinhar="direita">Texto.</p>'),
+        ];
+        config()->set('blog.fontes', [FonteDeTeste::class]);
+
+        $this->get('/blog/com-foto')->assertOk()->assertSee('id="blog-foto-ampliada"', false);
+        $this->get('/blog/sem-ampliar')->assertOk()->assertDontSee('id="blog-foto-ampliada"', false);
+
+        $css = $this->get('/blog/estilo.css')->getContent();
+        $this->assertStringContainsString('img[data-alinhar="esquerda"] { float: left;', $css);
+        $this->assertStringContainsString('img[data-tamanho="media"] { width: 50%; }', $css);
+        $this->assertStringContainsString('blog-foto-ampliada', $this->get('/blog/compartilhar.js')->getContent());
+    }
 }
 
 /** Fonte de mentira para os testes: devolve o que estiver em $posts. */

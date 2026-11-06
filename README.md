@@ -7,7 +7,7 @@ Inertia. Não usa banco, build, painel nem IA: escreveu, deu push, está no ar.
 
 ```bash
 composer config repositories.blog vcs https://github.com/urbanodev81/blog
-composer require urbanodev/blog:^0.4
+composer require urbanodev/blog:^0.7
 php artisan blog:instalar
 ```
 
@@ -75,6 +75,20 @@ em três pontos fixos:
 ```
 
 `$inicio` só é `true` em `/blog` sem filtro, na página 1.
+
+**Foto dentro do texto, com o texto ao lado:** o estilo e o "ampliar ao
+clicar" vêm do pacote. Basta o HTML que a fonte entrega trazer estes atributos
+na `<img>` (o editor do sistema grava, e o saneador dele só deixa passar estes
+valores):
+
+| Atributo | Valores | Efeito |
+|---|---|---|
+| `data-tamanho` | `pequena` (33%), `media` (50%) | sem ele, a foto ocupa a largura do texto |
+| `data-alinhar` | `esquerda`, `centro`, `direita` | esquerda e direita põem o texto ao lado da foto; título, `hr`, `pre` e `figure` descem para baixo dela |
+| `data-ampliar` | `sim` | clicar (ou Enter) abre a foto grande num `<dialog>`; Esc ou clique fecha |
+
+Abaixo de 600 px a foto volta ao centro, sem texto ao lado. Texto em `.md` não
+usa isso, porque o Markdown remove HTML cru.
 
 ## Quando não usar
 

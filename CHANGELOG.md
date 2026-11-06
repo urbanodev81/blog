@@ -2,6 +2,12 @@
 
 ## [Não lançado]
 
+- Foto dentro do texto (v0.7.0): o estilo de `data-tamanho` (pequena/média),
+  `data-alinhar` (esquerda/centro/direita, com o texto ao lado) e
+  `data-ampliar="sim"` (abre a foto num `<dialog>`) saiu do urbisdev e veio
+  para o `blog.css` e o `blog.js`. No celular a foto volta ao centro. O
+  `<dialog>` só entra na página quando há foto marcada. Quem não manda esses
+  atributos não vê mudança.
 - Encaixes (v0.6.0): config `blog.encaixes` com três pontos fixos onde o
   sistema inclui as próprias views (`fim_do_texto`, `fim_do_indice` e
   `pagina`). É por eles que um sistema com banco põe comentários, "ajudou?",
